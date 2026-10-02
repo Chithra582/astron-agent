@@ -1,0 +1,18 @@
+name: maas-model-router
+description: Dispatches completion and reasoning requests across integrated MaaS foundation models with automated fallback.
+input_schema:
+  type: object
+  properties:
+    prompt:
+      type: string
+      description: Prompt or conversation messages to send to the foundation model.
+    model_preference:
+      type: string
+      description: Target model preference (e.g., 'spark-max', 'deepseek-r1', 'qwen-plus', 'auto').
+      default: "auto"
+    temperature:
+      type: number
+      description: Sampling temperature for output diversity.
+      default: 0.3
+  required:
+    - prompt

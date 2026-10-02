@@ -1,0 +1,17 @@
+name: workflow-pipeline-executor
+description: Triggers and manages the execution of an agentic workflow DAG instance with input arguments.
+input_schema:
+  type: object
+  properties:
+    workflow_id:
+      type: string
+      description: Unique identifier of the workflow definition to execute.
+    input_data:
+      type: object
+      description: Input key-value parameters passed to the entry node of the workflow.
+    async_execution:
+      type: boolean
+      description: Whether to execute asynchronously in the background.
+      default: false
+  required:
+    - workflow_id

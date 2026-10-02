@@ -1,0 +1,17 @@
+name: rpa-action-runner
+description: Dispatches an automation task to an intelligent RPA worker bot for cross-system process execution.
+input_schema:
+  type: object
+  properties:
+    process_name:
+      type: string
+      description: Name or ID of the RPA process script to execute.
+    parameters:
+      type: object
+      description: Input parameters and form data required by the RPA task.
+    requires_approval:
+      type: boolean
+      description: Whether manual operator approval is mandatory before final execution.
+      default: false
+  required:
+    - process_name

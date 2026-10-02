@@ -1,0 +1,17 @@
+name: mcp-plugin-registry-client
+description: Queries available Model Context Protocol (MCP) plugins, verifies schema definitions, and invokes tool operations.
+input_schema:
+  type: object
+  properties:
+    tool_name:
+      type: string
+      description: The registered name of the MCP tool to execute.
+    arguments:
+      type: object
+      description: Input arguments conforming to the tool's JSON schema.
+    server_id:
+      type: string
+      description: Optional identifier of a specific MCP server endpoint.
+  required:
+    - tool_name
+    - arguments

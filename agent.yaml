@@ -1,0 +1,21 @@
+spec_version: "0.1.0"
+name: "astron-agent"
+version: "1.0.0"
+description: "Enterprise-grade agentic workflow orchestration platform integrating AI DAG execution, intelligent RPA, MCP tool federation, and multi-model routing."
+author: "iFLYTEK / Astron-Agent Contributors"
+license: "Apache-2.0"
+metadata:
+  domain: "Developer Tools / Enterprise Agentic Workflow Orchestration, RPA & MCP Integration"
+  category: "Developer Tools"
+  framework: "Astron Core / Python / FastAPI / Vue3 / Docker"
+  language: "Python"
+skills:
+  - "workflow-dag-orchestration"
+  - "intelligent-rpa-integration"
+  - "mcp-tool-ecosystem-federation"
+  - "multi-model-maas-routing"
+tools:
+  - "workflow-pipeline-executor"
+  - "rpa-action-runner"
+  - "mcp-plugin-registry-client"
+  - "maas-model-router"

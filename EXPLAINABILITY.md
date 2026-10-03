@@ -11,8 +11,7 @@ This document explains the internal mechanisms, data lineage, operational bounda
 
 ## How the Agent Decides
 
-### 1. Deterministic Multi-Stage Decision Pipeline
-The agent executes enterprise agentic workflows and RPA processes through a deterministic, 5-stage orchestration pipeline.
+# Explainability & Decision Transparency Report operates via a deterministic five-stage operational pipeline.
 
 ### 1. Decision Architecture
 
@@ -53,13 +52,30 @@ The runtime intake, state classification, evaluation, and execution tracking ope
 
 ### 2. Decision Logic & Routing Formulations
 
+Scoring
+Model selection across available Model-as-a-Service (MaaS) endpoints applies a multi-dimensional capability-cost routing formulation:
 
+$$S_{\text{maas}}(m, t) = w_1 \cdot \text{BenchmarkFit}(m, t) + w_2 \cdot \left(1 - \frac{\text{Latency}_{\text{p95}}(m)}{\text{MaxLatency}}\right) - w_3 \cdot \text{CostRatio}(m)$$
+
+Where:
+- $w_1 = 0.50$: Empirical benchmark capability score for task category $t$.
+- $w_2 = 0.30$: Moving average p95 response time factor.
+- $w_3 = 0.20$: Normalized cost per 1k input/output tokens.
+
+Knowledge base retrieval relevance scoring combines semantic embedding similarity with keyword BM25 rankings:
+
+$$R_{\text{hybrid}}(d_i, q) = \lambda \cdot \text{CosineSim}(\mathbf{e}_{d_i}, \mathbf{e}_q) + (1 - \lambda) \cdot \text{BM25}(d_i, q)$$
+
+Where $\lambda = 0.70$ balances dense semantic matching with strict term matching.
 
 ### 3. Thresholding & Refusal Decision Criteria
 
 # Explainability & Decision Transparency Report enforces strict operational boundaries and deterministic refusal thresholds:
-- **Refusal on Policy Violation**: Requests violating boundary constraints halt with code `ERR_POLICY_VIOLATION`.
-- **Refusal on Timeout**: Executions exceeding budget limits terminate with code `ERR_EXECUTION_TIMEOUT`.
+- **Refusal on ERR_WORKFLOW_TIMEOUT_EXCEEDED**: **Max Workflow Timeout** halts execution with code `ERR_WORKFLOW_TIMEOUT_EXCEEDED`.
+- **Refusal on ERR_CYCLIC_LOOP_LIMIT_REACHED**: **Max Loop Iteration Count** halts execution with code `ERR_CYCLIC_LOOP_LIMIT_REACHED`.
+- **Refusal on ERR_TENANT_ISOLATION_VIOLATION**: **Cross-Tenant Access Attempt** halts execution with code `ERR_TENANT_ISOLATION_VIOLATION`.
+- **Refusal on ERR_RPA_APPROVAL_PENDING**: **RPA Critical Action Unapproved** halts execution with code `ERR_RPA_APPROVAL_PENDING`.
+- **Refusal on ERR_MAAS_RATE_THROTTLED**: **MaaS Upstream Rate Limit** halts execution with code `ERR_MAAS_RATE_THROTTLED`.
 
 ### 4. Fallback Decision Mechanism
 
@@ -69,8 +85,8 @@ Continuous operational stability is maintained through layered fault recovery:
 ### 5. Human-in-the-Loop Governance
 
 Human operators retain sovereign authority over the multi-agent execution lifecycle:
-- **Operational Review**: Sensitive actions require operator sign-off.
-- **Audit Logging**: All decisions are recorded for auditability.
+- **Consequential Action Sign-Off**: Sensitive and consequential actions require operator sign-off.
+- **Offline Ledger Auditing**: Operators can verify execution records and state transitions offline.
 
 ---
 
@@ -81,11 +97,13 @@ Human operators retain sovereign authority over the multi-agent execution lifecy
 ### 1. Ingested Input Data
 
 The framework processes only operational data necessary to perform its functions:
-- **Input Directives**: Operational tasks and data payloads.
+- **Workflow Payloads**: JSON input parameters, schema-validated task arguments, and uploaded files.
+- **Enterprise System Data**: ERP records, database queries, and web forms scraped via RPA bots.
+- **Tenant Contexts**: Casdoor SSO identity claims, tenant namespaces, and role scopes.
 
 ### 2. Configuration & Reference Data
 
-- **Configuration Schemas**: Declarative system configuration files.
+- **Configuration Schemas**: Declarative system policy files.
 
 ### 3. Base Model & Inference Lineage
 
@@ -104,101 +122,6 @@ The framework processes only operational data necessary to perform its functions
 ## Limitations
 
 Understanding the operational boundaries and technical constraints of # Explainability & Decision Transparency Report is essential for effective deployment.
-
-### 1. Deterministic Multi-Stage Decision Pipeline
-The agent executes enterprise agentic workflows and RPA processes through a deterministic, 5-stage orchestration pipeline.
-
-```
-+-----------------------------------------------------------------------------------+
-|                        Deterministic Astron Workflow Pipeline                     |
-+-----------------------------------------------------------------------------------+
-|  [Stage 1: Workflow Ingestion & Tenant Access Validation]                         |
-|     --> Validate tenant JWT token, authenticate RBAC scope, & parse DAG manifest  |
-+-----------------------------------------+-----------------------------------------+
-                                          |
-                                          v
-+-----------------------------------------------------------------------------------+
-|  [Stage 2: Dependency Resolution & Resource Pre-flight Check]                     |
-|     --> Resolve upstream node dependencies, check MaaS models & MCP tool endpoints|
-+-----------------------------------------+-----------------------------------------+
-                                          |
-                                          v
-+-----------------------------------------------------------------------------------+
-|  [Stage 3: Dynamic DAG Execution & RPA Action Dispatch]                           |
-|     --> Orchestrate node evaluations, execute RPA bots, & query knowledge bases   |
-+-----------------------------------------+-----------------------------------------+
-                                          |
-                                          v
-+-----------------------------------------------------------------------------------+
-|  [Stage 4: State Checkpoint & Human Approval Interception]                        |
-|     --> Save intermediate state snapshots; pause for sign-off on sensitive actions|
-+-----------------------------------------+-----------------------------------------+
-                                          |
-                                          v
-+-----------------------------------------------------------------------------------+
-|  [Stage 5: Audit Telemetry Export & Workflow Completion]                          |
-|     --> Aggregate token consumption, publish trace metrics, & deliver final output|
-+-----------------------------------------------------------------------------------+
-```
-
-### 2. Mathematical Decision & Affinity Scoring
-Model selection across available Model-as-a-Service (MaaS) endpoints applies a multi-dimensional capability-cost routing formulation:
-
-$$S_{\text{maas}}(m, t) = w_1 \cdot \text{BenchmarkFit}(m, t) + w_2 \cdot \left(1 - \frac{\text{Latency}_{\text{p95}}(m)}{\text{MaxLatency}}\right) - w_3 \cdot \text{CostRatio}(m)$$
-
-Where:
-- $w_1 = 0.50$: Empirical benchmark capability score for task category $t$.
-- $w_2 = 0.30$: Moving average p95 response time factor.
-- $w_3 = 0.20$: Normalized cost per 1k input/output tokens.
-
-Knowledge base retrieval relevance scoring combines semantic embedding similarity with keyword BM25 rankings:
-
-$$R_{\text{hybrid}}(d_i, q) = \lambda \cdot \text{CosineSim}(\mathbf{e}_{d_i}, \mathbf{e}_q) + (1 - \lambda) \cdot \text{BM25}(d_i, q)$$
-
-Where $\lambda = 0.70$ balances dense semantic matching with strict term matching.
-
-### 3. Thresholding & Refusal Decision Criteria
-When workflow executions violate system policies or reach operational ceilings, execution is halted with standardized error codes:
-
-| Threshold Parameter | Value | Decision / Refusal Action | Error Code |
-| :--- | :--- | :--- | :--- |
-| **Max Workflow Timeout** | $> 600$ seconds | Terminate execution to prevent runaway resource hold | `ERR_WORKFLOW_TIMEOUT_EXCEEDED` |
-| **Max Loop Iteration Count** | $\ge 20$ iterations | Break cyclic loop execution | `ERR_CYCLIC_LOOP_LIMIT_REACHED` |
-| **Cross-Tenant Access Attempt** | Tenant ID mismatch | Deny access immediately with 403 Forbidden | `ERR_TENANT_ISOLATION_VIOLATION` |
-| **RPA Critical Action Unapproved** | Missing manual approval | Suspend execution and queue for human sign-off | `ERR_RPA_APPROVAL_PENDING` |
-| **MaaS Upstream Rate Limit** | HTTP 429 received | Trigger exponential backoff and model failover | `ERR_MAAS_RATE_THROTTLED` |
-
-### 4. Multi-Tier Fallback Mechanisms & Human-in-the-Loop Governance
-1. **Tier 1 (Automated Node Retry)**: Transient network failures in external API or tool invocations undergo 3 exponential backoff retries (1s, 2s, 4s).
-2. **Tier 2 (Alternative Model Failover)**: If a primary model endpoint (e.g. DeepSeek-R1) experiences downtime or high latency, the workflow seamlessly switches to a fallback model (e.g. iFLYTEK Spark or Qwen).
-3. **Tier 3 (Human-in-the-Loop Interruption)**: Business-critical nodes (e.g. financial transaction dispatch or ERP ledger entry) enter a suspended state awaiting physical human operator approval via web console.
-
----
-
-## The Data It Uses
-
-### 1. Ingestion Data & Input Types
-- **Workflow Payloads**: JSON input parameters, schema-validated task arguments, and uploaded files.
-- **Enterprise System Data**: ERP records, database queries, and web forms scraped via RPA bots.
-- **Tenant Contexts**: Casdoor SSO identity claims, tenant namespaces, and role scopes.
-
-### 2. Reference Storage & Database Engines
-- **Relational Metadata**: PostgreSQL / MySQL housing workflow DAG definitions, execution logs, and tenant quotas.
-- **Vector Knowledge Bases**: Milvus / pgvector storing chunked corporate documentation.
-- **Cache & Event Bus**: Redis / RabbitMQ managing asynchronous task queues and node execution states.
-
-### 3. Model Lineage & System Architecture
-- **Supported Models**: iFLYTEK Spark series, DeepSeek-V3/R1, Qwen-2.5, OpenAI GPT-4o, Anthropic Claude 3.5.
-- **Platform Stack**: Python 3.10+, FastAPI backend, Celery task workers, Vue 3 web console, Docker/Kubernetes.
-
-### 4. Data Privacy, Governance & Retention
-- **Strict Multi-Tenant Separation**: All database rows, vector collections, and execution traces are partitioned by `tenant_id`.
-- **On-Premises Deployment Support**: Deployable entirely behind corporate firewalls with zero external telemetry transmission.
-- **Execution Log Retention**: Task execution records and intermediate node states are retained for 30 days before archival.
-
----
-
-## Limitations
 
 ### 1. Fragility of RPA Desktop Selectors
 - **Limitation**: Windows desktop UI updates can break fixed RPA accessibility selectors, requiring script maintenance.
@@ -238,102 +161,7 @@ When workflow executions violate system policies or reach operational ceilings, 
 | - Base model lineage & deterministic engines | Section 3 | Verified |
 | - Data privacy, retention lifecycle & MITRE/OWASP | Section 4 | Verified |
 | **Its limitations** | [Limitations](#limitations) | **Covered** |
-| - Deterministic Multi-Stage Decision Pipeline
-The agent executes enterprise agentic workflows and RPA processes through a deterministic, 5-stage orchestration pipeline.
-
-```
-+-----------------------------------------------------------------------------------+
-|                        Deterministic Astron Workflow Pipeline                     |
-+-----------------------------------------------------------------------------------+
-|  [Stage 1: Workflow Ingestion & Tenant Access Validation]                         |
-|     --> Validate tenant JWT token, authenticate RBAC scope, & parse DAG manifest  |
-+-----------------------------------------+-----------------------------------------+
-                                          |
-                                          v
-+-----------------------------------------------------------------------------------+
-|  [Stage 2: Dependency Resolution & Resource Pre-flight Check]                     |
-|     --> Resolve upstream node dependencies, check MaaS models & MCP tool endpoints|
-+-----------------------------------------+-----------------------------------------+
-                                          |
-                                          v
-+-----------------------------------------------------------------------------------+
-|  [Stage 3: Dynamic DAG Execution & RPA Action Dispatch]                           |
-|     --> Orchestrate node evaluations, execute RPA bots, & query knowledge bases   |
-+-----------------------------------------+-----------------------------------------+
-                                          |
-                                          v
-+-----------------------------------------------------------------------------------+
-|  [Stage 4: State Checkpoint & Human Approval Interception]                        |
-|     --> Save intermediate state snapshots; pause for sign-off on sensitive actions|
-+-----------------------------------------+-----------------------------------------+
-                                          |
-                                          v
-+-----------------------------------------------------------------------------------+
-|  [Stage 5: Audit Telemetry Export & Workflow Completion]                          |
-|     --> Aggregate token consumption, publish trace metrics, & deliver final output|
-+-----------------------------------------------------------------------------------+
-```
-
-### 2. Mathematical Decision & Affinity Scoring
-Model selection across available Model-as-a-Service (MaaS) endpoints applies a multi-dimensional capability-cost routing formulation:
-
-$$S_{\text{maas}}(m, t) = w_1 \cdot \text{BenchmarkFit}(m, t) + w_2 \cdot \left(1 - \frac{\text{Latency}_{\text{p95}}(m)}{\text{MaxLatency}}\right) - w_3 \cdot \text{CostRatio}(m)$$
-
-Where:
-- $w_1 = 0.50$: Empirical benchmark capability score for task category $t$.
-- $w_2 = 0.30$: Moving average p95 response time factor.
-- $w_3 = 0.20$: Normalized cost per 1k input/output tokens.
-
-Knowledge base retrieval relevance scoring combines semantic embedding similarity with keyword BM25 rankings:
-
-$$R_{\text{hybrid}}(d_i, q) = \lambda \cdot \text{CosineSim}(\mathbf{e}_{d_i}, \mathbf{e}_q) + (1 - \lambda) \cdot \text{BM25}(d_i, q)$$
-
-Where $\lambda = 0.70$ balances dense semantic matching with strict term matching.
-
-### 3. Thresholding & Refusal Decision Criteria
-When workflow executions violate system policies or reach operational ceilings, execution is halted with standardized error codes:
-
-| Threshold Parameter | Value | Decision / Refusal Action | Error Code |
-| :--- | :--- | :--- | :--- |
-| **Max Workflow Timeout** | $> 600$ seconds | Terminate execution to prevent runaway resource hold | `ERR_WORKFLOW_TIMEOUT_EXCEEDED` |
-| **Max Loop Iteration Count** | $\ge 20$ iterations | Break cyclic loop execution | `ERR_CYCLIC_LOOP_LIMIT_REACHED` |
-| **Cross-Tenant Access Attempt** | Tenant ID mismatch | Deny access immediately with 403 Forbidden | `ERR_TENANT_ISOLATION_VIOLATION` |
-| **RPA Critical Action Unapproved** | Missing manual approval | Suspend execution and queue for human sign-off | `ERR_RPA_APPROVAL_PENDING` |
-| **MaaS Upstream Rate Limit** | HTTP 429 received | Trigger exponential backoff and model failover | `ERR_MAAS_RATE_THROTTLED` |
-
-### 4. Multi-Tier Fallback Mechanisms & Human-in-the-Loop Governance
-1. **Tier 1 (Automated Node Retry)**: Transient network failures in external API or tool invocations undergo 3 exponential backoff retries (1s, 2s, 4s).
-2. **Tier 2 (Alternative Model Failover)**: If a primary model endpoint (e.g. DeepSeek-R1) experiences downtime or high latency, the workflow seamlessly switches to a fallback model (e.g. iFLYTEK Spark or Qwen).
-3. **Tier 3 (Human-in-the-Loop Interruption)**: Business-critical nodes (e.g. financial transaction dispatch or ERP ledger entry) enter a suspended state awaiting physical human operator approval via web console.
-
----
-
-## The Data It Uses
-
-### 1. Ingestion Data & Input Types
-- **Workflow Payloads**: JSON input parameters, schema-validated task arguments, and uploaded files.
-- **Enterprise System Data**: ERP records, database queries, and web forms scraped via RPA bots.
-- **Tenant Contexts**: Casdoor SSO identity claims, tenant namespaces, and role scopes.
-
-### 2. Reference Storage & Database Engines
-- **Relational Metadata**: PostgreSQL / MySQL housing workflow DAG definitions, execution logs, and tenant quotas.
-- **Vector Knowledge Bases**: Milvus / pgvector storing chunked corporate documentation.
-- **Cache & Event Bus**: Redis / RabbitMQ managing asynchronous task queues and node execution states.
-
-### 3. Model Lineage & System Architecture
-- **Supported Models**: iFLYTEK Spark series, DeepSeek-V3/R1, Qwen-2.5, OpenAI GPT-4o, Anthropic Claude 3.5.
-- **Platform Stack**: Python 3.10+, FastAPI backend, Celery task workers, Vue 3 web console, Docker/Kubernetes.
-
-### 4. Data Privacy, Governance & Retention
-- **Strict Multi-Tenant Separation**: All database rows, vector collections, and execution traces are partitioned by `tenant_id`.
-- **On-Premises Deployment Support**: Deployable entirely behind corporate firewalls with zero external telemetry transmission.
-- **Execution Log Retention**: Task execution records and intermediate node states are retained for 30 days before archival.
-
----
-
-## Limitations
-
-### 1. Fragility of RPA Desktop Selectors | Section 1 | Verified |
+| - Fragility of RPA Desktop Selectors | Section 1 | Verified |
 | - High Memory Consumption During Large PDF Vectorization | Section 2 | Verified |
 | - Latency in Multi-Node Sequential DAGs | Section 3 | Verified |
 | - Heterogeneous Tool Exception Schemas | Section 4 | Verified |

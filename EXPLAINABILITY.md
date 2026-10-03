@@ -1,8 +1,8 @@
 # EXPLAINABILITY.md
 
-This document explains the internal mechanisms, data lineage, operational boundaries, and governance framework of **# Explainability & Decision Transparency Report** (`astron-agent`) in accordance with the **OpenGAP v0.1.0** specification for the **HiDevs GitAgent Passport** clearance pipeline.
+This document explains the internal mechanisms, data lineage, operational boundaries, and governance framework of **Astron Agent** (`astron-agent`) in accordance with the **OpenGAP v0.1.0** specification for the **HiDevs GitAgent Passport** clearance pipeline.
 
-> **Agent Name:** # Explainability & Decision Transparency Report (`astron-agent`)  
+> **Agent Name:** Astron Agent (`astron-agent`)  
 > **Specification:** OpenGAP v0.1.0  
 > **Category / Domain:** Developer Tools / Enterprise Agentic Workflow Orchestration, RPA & MCP Integration  
 > **Compliance Standard:** OpenGAP Checkpoint 2 (Explainability & Decision Governance), OWASP LLM Top 10, MITRE ATLAS  
@@ -11,7 +11,7 @@ This document explains the internal mechanisms, data lineage, operational bounda
 
 ## How the Agent Decides
 
-# Explainability & Decision Transparency Report operates via a deterministic five-stage operational pipeline.
+The agent executes enterprise agentic workflows and RPA processes through a deterministic, 5-stage orchestration pipeline.
 
 ### 1. Decision Architecture
 
@@ -52,7 +52,6 @@ The runtime intake, state classification, evaluation, and execution tracking ope
 
 ### 2. Decision Logic & Routing Formulations
 
-Scoring
 Model selection across available Model-as-a-Service (MaaS) endpoints applies a multi-dimensional capability-cost routing formulation:
 
 $$S_{\text{maas}}(m, t) = w_1 \cdot \text{BenchmarkFit}(m, t) + w_2 \cdot \left(1 - \frac{\text{Latency}_{\text{p95}}(m)}{\text{MaxLatency}}\right) - w_3 \cdot \text{CostRatio}(m)$$
@@ -70,29 +69,31 @@ Where $\lambda = 0.70$ balances dense semantic matching with strict term matchin
 
 ### 3. Thresholding & Refusal Decision Criteria
 
-# Explainability & Decision Transparency Report enforces strict operational boundaries and deterministic refusal thresholds:
-- **Refusal on ERR_WORKFLOW_TIMEOUT_EXCEEDED**: **Max Workflow Timeout** halts execution with code `ERR_WORKFLOW_TIMEOUT_EXCEEDED`.
-- **Refusal on ERR_CYCLIC_LOOP_LIMIT_REACHED**: **Max Loop Iteration Count** halts execution with code `ERR_CYCLIC_LOOP_LIMIT_REACHED`.
-- **Refusal on ERR_TENANT_ISOLATION_VIOLATION**: **Cross-Tenant Access Attempt** halts execution with code `ERR_TENANT_ISOLATION_VIOLATION`.
-- **Refusal on ERR_RPA_APPROVAL_PENDING**: **RPA Critical Action Unapproved** halts execution with code `ERR_RPA_APPROVAL_PENDING`.
-- **Refusal on ERR_MAAS_RATE_THROTTLED**: **MaaS Upstream Rate Limit** halts execution with code `ERR_MAAS_RATE_THROTTLED`.
+Astron Agent enforces strict operational boundaries and deterministic refusal thresholds:
+- **Refusal on ERR_WORKFLOW_TIMEOUT_EXCEEDED**: Max Workflow Timeout ($> 600$ seconds) halts execution with code `ERR_WORKFLOW_TIMEOUT_EXCEEDED`.
+- **Refusal on ERR_CYCLIC_LOOP_LIMIT_REACHED**: Max Loop Iteration Count ($\ge 20$ iterations) halts execution with code `ERR_CYCLIC_LOOP_LIMIT_REACHED`.
+- **Refusal on ERR_TENANT_ISOLATION_VIOLATION**: Cross-Tenant Access Attempt (Tenant ID mismatch) halts execution with code `ERR_TENANT_ISOLATION_VIOLATION`.
+- **Refusal on ERR_RPA_APPROVAL_PENDING**: RPA Critical Action Unapproved (Missing manual approval) halts execution with code `ERR_RPA_APPROVAL_PENDING`.
+- **Refusal on ERR_MAAS_RATE_THROTTLED**: MaaS Upstream Rate Limit (HTTP 429 received) halts execution with code `ERR_MAAS_RATE_THROTTLED`.
 
 ### 4. Fallback Decision Mechanism
 
 Continuous operational stability is maintained through layered fault recovery:
+- **Tier 1 (Automated Node Retry)**: Transient network failures in external API or tool invocations undergo 3 exponential backoff retries (1s, 2s, 4s).
+- **Tier 2 (Alternative Model Failover)**: If a primary model endpoint (e.g. DeepSeekR1) experiences downtime or high latency, the workflow seamlessly switches to a fallback model (e.g. iFLYTEK Spark or Qwen).
 - **Model Fallback Cascade**: High-level reasoning and synthesis default to `gemini-2.0-flash` with automatic failover to `gpt-4o` and `claude-3-5-sonnet`.
 
 ### 5. Human-in-the-Loop Governance
 
 Human operators retain sovereign authority over the multi-agent execution lifecycle:
-- **Consequential Action Sign-Off**: Sensitive and consequential actions require operator sign-off.
-- **Offline Ledger Auditing**: Operators can verify execution records and state transitions offline.
+- **Tier 3 (HumanintheLoop Interruption)**: Businesscritical nodes (e.g. financial transaction dispatch or ERP ledger entry) enter a suspended state awaiting physical human operator approval via web console.
+- **Benchmark Trajectory Auditing**: Operators inspect evaluation traces, raw generation tokens, and container logs to verify scoring fidelity.
 
 ---
 
 ## The Data It Uses
 
-# Explainability & Decision Transparency Report operates under strict principles of data minimization, environment isolation, and privacy protection.
+Astron Agent operates under strict principles of data minimization, environment isolation, and privacy protection.
 
 ### 1. Ingested Input Data
 
@@ -103,7 +104,9 @@ The framework processes only operational data necessary to perform its functions
 
 ### 2. Configuration & Reference Data
 
-- **Configuration Schemas**: Declarative system policy files.
+- **Relational Metadata**: PostgreSQL / MySQL housing workflow DAG definitions, execution logs, and tenant quotas.
+- **Vector Knowledge Bases**: Milvus / pgvector storing chunked corporate documentation.
+- **Cache & Event Bus**: Redis / RabbitMQ managing asynchronous task queues and node execution states.
 
 ### 3. Base Model & Inference Lineage
 
@@ -121,7 +124,7 @@ The framework processes only operational data necessary to perform its functions
 
 ## Limitations
 
-Understanding the operational boundaries and technical constraints of # Explainability & Decision Transparency Report is essential for effective deployment.
+Understanding the operational boundaries and technical constraints of Astron Agent is essential for effective deployment.
 
 ### 1. Fragility of RPA Desktop Selectors
 - **Limitation**: Windows desktop UI updates can break fixed RPA accessibility selectors, requiring script maintenance.
